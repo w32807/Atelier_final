@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.atelier.dao.BT_Dao">
+
+	<select id="getBasketList" parameterType="String" resultType="com.atelier.dto.BT_Dto">
+	 SELECT * FROM BASKET INNER JOIN PRODUCT_IMAGE ON BASKET.BT_PD_CODE = PRODUCT_IMAGE.PI_PD_CODE
+      WHERE BASKET.BT_CM_ID = #{bt_cm_id}
+	</select>
+	
+	<insert id="goBasket" parameterType="com.atelier.dto.BT_Dto">
+		INSERT INTO BASKET VALUES(BT_NUM_SEQ.NEXTVAL,#{bt_cm_id},#{bt_at_name},#{bt_price},#{bt_count},#{bt_pd_code})
+	</insert>
+
+	<delete id="deleteBasket">
+		DELETE FROM BT WHERE BT_NUM = #{btNum}
+	</delete>
+	
+</mapper>

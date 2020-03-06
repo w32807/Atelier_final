@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atelier.dao.PI_Dao">
+
+	<select id="getPDImageList" resultType="com.atelier.dto.PI_productImgDto">
+		SELECT * FROM PI
+		WHERE PI_PD_CODE = #{pd_code}
+	</select>
+	
+</mapper>

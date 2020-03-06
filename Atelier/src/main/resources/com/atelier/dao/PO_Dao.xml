@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.atelier.dao.PO_Dao">
+	
+	<select id="getMyOrder" parameterType="String" resultType="com.atelier.dto.PO_Dto">
+		SELECT * FROM PROD_ORDER INNER JOIN PRODUCT_IMAGE ON PROD_ORDER.PO_PD_CODE = PRODUCT_IMAGE.PI_PD_CODE
+		WHERE PROD_ORDER.PO_CM_ID = #{po_cm_id}
+			
+	</select>
+	
+	<select id="getOrderList" parameterType="com.atelier.dto.PO_Dto" resultType="com.atelier.dto.PO_Dto">
+		SELECT * FROM PROD_ORDER INNER JOIN PRODUCT_IMAGE ON PROD_ORDER.PO_PD_CODE = PRODUCT_IMAGE.PI_PD_CODE
+	      WHERE PROD_ORDER.PO_CM_ID = #{po_cm_id} AND PROD_ORDER.PO_STATE = #{po_state}
+	</select>
+	
+	<delete id="orderCancle" parameterType="String" >
+		DELETE FROM PROD_ORDER WHERE PO_NUM = #{prod}
+	</delete>
+
+</mapper>

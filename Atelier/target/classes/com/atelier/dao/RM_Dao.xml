@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.RM_Dao">
+
+	<select id="getRMList" resultType="com.atelier.dto.RM_Dto">
+		SELECT * FROM RM
+	</select>
+	
+	<select id="getRMSearchList" resultType="com.atelier.dto.RM_Dto">
+		SELECT * FROM RM
+		<include refid="search"></include>
+	</select>
+		
+	<sql id="search">
+		<choose>
+			<when test="keyword != null and keyword != ''">
+				WHERE RM_TYPE LIKE '%'||#{keyword}||'%'
+			</when>
+		</choose>
+	</sql>
+	
+	<select id="getRMPaymentList" resultType="com.atelier.dto.RM_Dto">
+		SELECT RM_TYPE, RM_PRICE, RM_NUM FROM RM
+		WHERE RM_NUM=#{rm_num}
+	</select>
+	
+</mapper>

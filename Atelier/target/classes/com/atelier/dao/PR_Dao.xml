@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.PR_Dao">
+
+	<select id="getProdReviewList" parameterType="Integer" resultType="com.atelier.dto.PR_Dto">
+		SELECT * FROM PR
+		WHERE PR_PD_CODE=#{pd_code}
+	</select>
+	
+	<insert id="prodReviewWrite" parameterType="com.atelier.dto.PR_Dto">
+		INSERT INTO PR
+		VALUES(PR_NUM_SEQ.NEXTVAL,#{pr_pd_code},#{pr_cm_id},#{pr_cm_nick},#{pr_star},#{pr_contents},DEFAULT)
+	</insert>
+	
+	<delete id="prodReviewDelete" parameterType="map">
+		DELETE FROM PR WHERE PR_NUM = #{pr_num} AND PR_CM_ID = #{aT_id}
+	</delete>
+	
+</mapper>

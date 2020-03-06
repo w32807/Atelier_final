@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atelier.dao.SB_Dao">
+	
+	<insert id="getSubscription" parameterType="com.atelier.dto.SB_Dto">
+		INSERT INTO SUBSCRIBE VALUES(SC_NUM_SEQ.NEXTVAL, #{sc_cm_id},#{sc_at_id} )
+	</insert>
+	
+	<select id ="getSubList" parameterType="String" resultType="com.atelier.dto.SBS_Dto">
+	SELECT * FROM SUBSCRIBE INNER JOIN ATELIER ON SUBSCRIBE.SC_AT_ID = ATELIER.AT_ID
+      WHERE SUBSCRIBE.SC_CM_ID = #{sc_cm_id}
+     </select> 
+     
+     <delete id="deleteATUserSCData" parameterType="String">
+		DELETE FROM SC
+		WHERE SC_CM_ID = #{cm_id}
+	</delete>
+	
+	<select id="compareSub" parameterType="com.atelier.dto.SB_Dto" resultType="Integer">
+		SELECT COUNT (*) FROM SC WHERE SC_CM_ID = #{sc_cm_id} AND SC_AT_ID = #{sc_at_id}
+	</select>
+	
+</mapper>

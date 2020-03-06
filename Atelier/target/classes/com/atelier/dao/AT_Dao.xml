@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.AT_Dao">
+	
+	<insert id="ATProdInsert" parameterType="com.atelier.dto.PD_productDto">
+	   INSERT INTO PD VALUES(PD_CODE_SEQ.NEXTVAL,#{pd_at_id},#{pd_name},#{pd_price},#{pd_detail},#{pd_at_name},#{pd_option},
+		   DEFAULT,DEFAULT,#{pd_cate},#{pd_type},#{pd_sex},#{pd_numofstock})
+	</insert>
+	
+	<insert id="ATProdImgInsert" parameterType="com.atelier.dto.PI_productImgDto" >
+	   INSERT INTO PI VALUES(PI_NUM_SEQ.NEXTVAL,#{pi_pd_code},#{pi_sysname},#{pi_oriname})
+	</insert>
+	
+	<select id="getPd_code" resultType="Integer">
+	   SELECT PD_CODE_SEQ.CURRVAL FROM DUAL
+	</select>
+	
+	<insert id="setATRegistUserData" parameterType="com.atelier.dto.AG_Dto">
+		INSERT INTO AG VALUES
+		(#{ag_id},#{ag_at_name},#{ag_phone},#{ag_snsaddr},
+		#{ag_cate1},#{ag_cate2},#{ag_cate3})
+	</insert>
+    
+    <select id="getModifyProd" parameterType="Integer" resultType="com.atelier.dto.PD_productDto">
+    	SELECT * FROM PD WHERE PD_CODE = #{pd_code}
+    </select>
+    
+    <select id="getProdImg" parameterType="Integer" resultType="com.atelier.dto.PI_productImgDto">
+    	SELECT * FROM PI WHERE PI_PD_CODE = #{pd_code}
+    </select>
+    
+    <update id="ATProdUpdate" parameterType="com.atelier.dto.PD_productDto">
+    	UPDATE PD SET PD_NAME = #{pd_name}, PD_PRICE = #{pd_price}, PD_DETAIL = #{pd_detail}, PD_AT_NAME = #{pd_at_name},
+		PD_OPTION = #{pd_option},PD_CATE = #{pd_cate}, PD_TYPE = #{pd_type}, PD_SEX = #{pd_sex}, PD_NUMOFSTOCK = #{pd_numofstock} 
+		WHERE PD_CODE = #{pd_code}
+    </update>
+    
+    <update id="changeProdRegist" parameterType="Integer">
+    	UPDATE PD SET PD_REGIST = 'T' WHERE PD_CODE = #{pd_code}
+    </update>
+    
+   	<insert id="replyInsert" parameterType="com.atelier.dto.SM_Dto" useGeneratedKeys="true" 
+      keyProperty="sm_num"> 
+         <selectKey keyProperty="sm_num" resultType="int" order="BEFORE">
+         SELECT SM_NUM_SEQ.NEXTVAL FROM DUAL
+         </selectKey>         
+         INSERT INTO SUPPORT_MG 
+         VALUES(${sm_num}, #{sm_contents},DEFAULT, #{sm_sender},#{sm_receiver})
+   	</insert>
+   
+    <select id="getReplyList1" parameterType="String" resultType="com.atelier.dto.SM_Dto">
+    	  SELECT * FROM SUPPORT_MG WHERE SM_RECEIVER = #{sm_receiver} ORDER BY SM_NUM DESC
+    </select>   
+
+     <delete id="deleteImg" parameterType="Integer">
+   	  DELETE FROM PI WHERE PI_PD_CODE = #{currentPd_code}
+   </delete>
+    
+   <delete id="deleteProd" parameterType="Integer">
+      DELETE FROM PD WHERE PD_CODE = #{pd_code}
+   </delete>
+   
+   <update id="chgDeliveryState" parameterType="Integer">
+   	  UPDATE PO SET PO_STATE = 'being' WHERE PO_NUM = #{PO_NUM}
+   </update>
+   
+   <select id="getAM_Name" parameterType="String" resultType="String">
+   	  SELECT AM_NAME FROM AM WHERE AM_ID = #{aT_id}	
+   </select>
+   
+   <select id="getATOrderList" parameterType="com.atelier.vo.PO_Vo" resultType="com.atelier.vo.PO_Vo">
+   	  SELECT * FROM POLIST WHERE PO_STATE = #{po_state} AND PO_CM_ID = #{po_cm_id}
+   </select>
+
+   <select id="getATRegistUserData" resultType="com.atelier.dto.AG_Dto">
+	   SELECT AG_ID, AG_AT_NAME, AG_PHONE, AG_SNSADDR, AG_CATE1, AG_CATE2, AG_CATE3 
+	   FROM AG
+	</select>
+	
+	<select id="getATRegistMember" resultType="com.atelier.dto.AG_Dto">
+	   SELECT *
+	   FROM AG
+	   WHERE AG_ID = #{id} 
+	</select>
+    
+    <delete id="deleteAGRequest" >
+	   DELETE FROM AG
+	   WHERE AG_ID = #{id}
+	</delete>
+	
+	<select id="getATOrderSearchList" parameterType="String" resultType="com.atelier.dto.RO_Dto">
+   		SELECT ro_num, ro_type, ro_date, ro_count, ro_rm_price FROM RM_ORDER WHERE RO_BUYER=#{id}
+    </select>
+   
+   <delete id="delATOrder" parameterType="Integer">
+   		DELETE FROM RM_ORDER WHERE ro_num=#{chkedBoxValue}
+   </delete>
+   
+   <select id="getSubscribeNum" parameterType="String" resultType="Integer">
+   		SELECT COUNT(*) FROM SUBSCRIBE WHERE SC_AT_ID=#{id}
+   </select>
+   
+   <select id="getProdOrderNum" parameterType="String" resultType="Integer">
+   		SELECT COUNT(*) FROM PROD_ORDER WHERE PO_AT_ID=#{id}
+   </select>
+   
+   <select id="getprodNum" parameterType="String" resultType="Integer">
+   		SELECT COUNT(*) FROM PRODUCT WHERE PD_AT_ID=#{id}
+   </select>
+	
+   	<select id="getAt_state" parameterType="String" resultType="String">
+   		SELECT AT_STATE FROM AT WHERE AT_ID = #{pd_at_id}
+   	</select>
+   	
+   	<select id="getATList" resultType="com.atelier.dto.AT_Dto">
+	   SELECT * FROM AT
+	</select>
+	
+	<select id="getATDetailData" resultType="com.atelier.dto.AT_Dto">
+	   SELECT * FROM AT
+	   WHERE AT_SEQ = #{at_seq}
+	</select>
+	
+	<update id="updateATData" parameterType="com.atelier.dto.AT_Dto">
+    	UPDATE AT SET 
+    	AT_ADDR = #{at_addr}, AT_SNSADDR = #{at_snsaddr}, AT_NAME = #{at_name}, AT_PHONE = #{at_phone},
+    	AT_CATE1 = #{at_cate1}, AT_CATE2 = #{at_cate2}, AT_CATE3 = #{at_cate3}
+    	WHERE AT_ID = #{at_id}
+    </update>
+    
+    <update id="pfPhoto" parameterType="com.atelier.dto.AT_Dto">
+    	UPDATE AT SET AT_LOGO = #{at_logo} WHERE AT_ID=#{at_id}
+    </update>
+    
+    <delete id="deleteATUserATData" parameterType="String">
+		DELETE FROM AT
+		WHERE AT_ID = #{cm_id}
+	</delete>
+	
+	 <update id="updateATState" parameterType="com.atelier.dto.AT_Dto">
+		UPDATE AT SET AT_STATE = #{at_state}
+		WHERE AT_ID = #{at_id}
+	</update>
+   
+   	<select id="getATListSearch" resultType="com.atelier.dto.AT_Dto">
+	   SELECT * FROM AT
+	   WHERE AT_NAME LIKE '%${at_name}%'
+	</select>
+	
+	<select id="getRecommendAT" resultType="com.atelier.dto.AT_Dto">
+	   select at_id,at_logo, at_state, at_seq, at_addr, at_snsaddr, at_name, at_phone, at_cate1, at_cate2, at_cate3 from 
+		(select rownum as num, at_id,at_logo, at_state, at_seq, at_addr, 
+    	at_snsaddr, at_name, at_phone, at_cate1, at_cate2, at_cate3 from AT) 
+		a where a.num=#{ran}
+	</select>
+   	
+   	<select id="prodSearch" parameterType="String" resultType="com.atelier.dto.RM_Dto">
+   		SELECT * FROM RM WHERE RM_TYPE = #{keyword}
+   	</select>
+   	
+   	<select id="getregistSelProd" parameterType="map" resultType="com.atelier.dto.PD_productDto">
+   		SELECT * FROM PD WHERE PD_REGIST = #{pd_regist} AND PD_AT_ID = #{cm_id}
+   	</select>
+   	
+   	<select id="getATSessionData" resultType="com.atelier.dto.AT_Dto">
+	   SELECT *
+	   FROM AT
+	   WHERE AT_ID = #{cm_id}
+	</select>
+   	
+   	<select id="getCateName" parameterType="String" resultType="String">
+   		SELECT CT_NAME FROM CT
+   	</select>
+   	
+   	<select id="getProductByCate" parameterType="String" resultType="com.atelier.dto.PD_productDto">
+		<![CDATA[
+		SELECT * FROM (SELECT * FROM PD WHERE PD_CATE = #{cate} ORDER BY PD_REGDATE DESC) WHERE ROWNUM <= 1
+		]]>
+   	</select>
+   	
+   	<select id="getATProdList" parameterType="String" resultType="com.atelier.dto.AT_ProdDto">
+   		SELECT PD_AT_ID,PI_PD_CODE,PI_ORINAME,PD_NAME,PD_PRICE,PD_SEX FROM  PRODUCT INNER JOIN
+   		 PRODUCT_IMAGE ON PRODUCT.PD_CODE = PRODUCT_IMAGE.PI_PD_CODE WHERE PRODUCT.PD_AT_ID =#{at_id}
+   	</select>
+   	
+   	<select id="deleteMessage" parameterType="Integer">
+   		DELETE FROM SUPPORT_MG WHERE SM_NUM = #{sm_num}
+   	</select>
+	
+	  	<insert id="setMessage" parameterType="com.atelier.dto.MG_Dto">
+   		INSERT INTO MESSAGE VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},DEFAULT,#{mg_contents},DEFAULT)
+   	</insert>
+   	
+   	 <insert id="insertATData" parameterType="com.atelier.dto.AG_Dto">
+		INSERT INTO AT VALUES
+		(#{at_id}, #{at_logo}, '활성', AT_SEQ_SEQ.NEXTVAL, #{at_addr}, #{at_snsaddr}, #{at_name},
+		#{at_phone},#{at_cate1},#{at_cate2},#{at_cate3})
+	</insert>
+	
+	<insert id="sendATMessageRQ" parameterType="com.atelier.dto.MG_Dto">
+		INSERT INTO MESSAGE VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},DEFAULT,#{mg_contents},DEFAULT)
+	</insert>
+	
+	<select id="getAtData" parameterType="String" resultType="com.atelier.dto.AT_Dto">
+		SELECT * FROM ATELIER WHERE AT_ID=#{id}
+	</select>
+	 
+	 <select id="getctList" resultType="com.atelier.dto.CT_Dto">
+	 	SELECT * FROM CT
+	 </select>
+	 
+	  <select id="getRmList" resultType="com.atelier.dto.RM_Dto">
+	 	SELECT * FROM RM
+	 </select>
+	 
+</mapper>

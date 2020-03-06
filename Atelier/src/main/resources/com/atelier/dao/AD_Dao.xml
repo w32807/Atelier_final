@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.AD_Dao">
+
+	<select id="getFAQList" parameterType="map"
+		resultType="com.atelier.dto.FT_FAQDto">
+		<![CDATA[
+		 SELECT * FROM 
+        (SELECT ROWNUM NUMROW, FT.* FROM 
+          (SELECT * FROM FT ORDER BY FT_NUM )FT  )
+        WHERE NUMROW <=#{maxNum}-(#{pageNum}-1)*10
+		AND NUMROW>=#{maxNum}-(#{pageNum}-1)*10-9
+		ORDER BY FT_NUM DESC
+		]]>
+	</select>
+
+	<insert id="FAQInsert" parameterType="com.atelier.dto.FT_FAQDto">
+		
+		INSERT INTO FT VALUES(FT_NUM_SEQ.NEXTVAL, #{ft_title},#{ft_contents},#{ft_id}, DEFAULT)
+	</insert>
+	
+	<select id="getFAQDetail" parameterType="Integer" resultType="com.atelier.dto.FT_FAQDto">
+		SELECT * FROM FT WHERE FT_NUM=#{ft_num}
+	</select>
+	
+	<update id="FAQupdate" parameterType="com.atelier.dto.FT_FAQDto">
+		UPDATE FT SET FT_TITLE=#{ft_title},FT_CONTENTS=#{ft_contents} WHERE FT_NUM=#{ft_num}
+	</update>
+	
+	<select id="getFAQCount" resultType="Integer">
+		SELECT COUNT(*) FROM FT
+	</select>
+	
+	<delete id="delFAQ" parameterType="String">
+		DELETE FROM FT WHERE FT_NUM=#{ft_num}
+	</delete>
+	
+	<insert id="materialInsert" parameterType="com.atelier.dto.AD_MaterialDto">
+		INSERT INTO RAW_MATERIAL VALUES (RM_NUM_SEQ.NEXTVAL, #{RM_TYPE},#{PRM_COMPANY},#{RM_COLOR}, #{RM_PRICE})
+	</insert>
+	
+	<select id="getADCompanyList" parameterType="map" resultType="com.atelier.dto.AD_MaterialDto">
+		<![CDATA[
+			 SELECT * FROM 
+        (SELECT ROWNUM NUMROW, RM.* FROM 
+          (SELECT * FROM RM ORDER BY RM_NUM )RM  )
+        WHERE NUMROW <=#{maxNum}-(#{adcPageNum}-1)*10
+		AND NUMROW>=#{maxNum}-(#{adcPageNum}-1)*10-9
+		ORDER BY RM_NUM DESC
+		]]>
+	</select>
+	
+	<select id="getADCompanyCount" resultType="Integer">
+		SELECT COUNT(*) FROM RAW_MATERIAL
+	</select>
+	
+	<select id="getADMessageList" parameterType="String" resultType="com.atelier.dto.MG_Dto">
+	SELECT * FROM MESSAGE WHERE MG_RECEIVER=#{mg_receiver} ORDER BY MG_NUM DESC
+	</select>
+
+	<select id="getADMaterial" parameterType="Integer" resultType="com.atelier.dto.AD_MaterialDto">
+		SELECT * FROM RAW_MATERIAL WHERE RM_NUM=#{RM_NUM}
+	</select>
+	
+	<insert id="materialFix" parameterType="com.atelier.dto.AD_MaterialDto">
+		UPDATE RAW_MATERIAL SET RM_TYPE = #{RM_TYPE}, PRM_COMPANY = #{PRM_COMPANY}, RM_COLOR = #{RM_COLOR}, RM_PRICE = #{RM_PRICE}
+		WHERE RM_NUM = #{RM_NUM}
+	</insert>
+	
+	<delete id="delADMaterial" parameterType="com.atelier.dto.AD_MaterialDto">
+		DELETE FROM RAW_MATERIAL WHERE RM_NUM=#{RM_NUM}
+	</delete>
+	
+	<select id="getADMessageContents" parameterType="Integer" resultType="com.atelier.dto.MG_Dto">
+		SELECT * FROM MESSAGE WHERE MG_NUM = #{MG_NUM}
+	</select>
+
+	<insert id="ADSendMessage" parameterType="com.atelier.dto.MG_Dto">
+		INSERT INTO MESSAGE
+		VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},'F',#{mg_contents},DEFAULT)
+	</insert>
+	
+	<delete id="delMessage" parameterType="String">
+		DELETE FROM MESSAGE WHERE MG_NUM=#{hs}
+	</delete>
+	
+	<select id="getADProdList" resultType="com.atelier.dto.PD_productDto">
+      SELECT * FROM PRODUCT INNER JOIN PRODUCT_IMAGE ON PRODUCT.PD_CODE = PRODUCT_IMAGE.PI_PD_CODE
+   </select>
+	
+	<select id="getADProdListCount" resultType="Integer">
+		SELECT COUNT(*) FROM PD
+	</select>
+	
+	<delete id="productDelete" parameterType="String" >
+	DELETE FROM PRODUCT WHERE PD_CODE = #{check}
+	</delete>
+	
+	<select id="ProductUpdate1" parameterType="Integer" resultType="com.atelier.dto.PD_productDto"> 
+		SELECT * FROM PRODUCT INNER JOIN PRODUCT_IMAGE ON PRODUCT.PD_CODE = PRODUCT_IMAGE.PI_PD_CODE WHERE PRODUCT.PD_CODE = #{pd_code}
+	</select> 
+	
+	<update id="ProductUpdate2" parameterType="com.atelier.dto.PD_productDto">
+		UPDATE PRODUCT SET PD_PRICE=#{pd_price},PD_NUMOFSTOCK=#{pd_numofstock},PD_OPTION=#{pd_option},
+		PD_CATE=#{pd_cate},PD_NAME=#{pd_name},PD_DETAIL=#{pd_detail} WHERE PD_CODE=#{pd_code}
+	</update>
+	
+	 <select id="SearchProc" parameterType="String" resultType="com.atelier.dto.PD_productDto">
+      SELECT * FROM PRODUCT INNER JOIN PRODUCT_IMAGE ON PRODUCT.PD_CODE = PRODUCT_IMAGE.PI_PD_CODE WHERE PD_NAME LIKE '%'||#{search}||'%' OR PD_NAME LIKE '%'||#{search}||'%' OR PD_NAME LIKE '%'||#{search}||'%'
+   </select>
+	
+	<select id="getRMCount" resultType="Integer">
+		SELECT COUNT(*) FROM RM
+	</select>
+	
+	<select id="setADMessage">
+		INSERT INTO MESSAGE VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},DEFAULT,#{mg_contents},DEFAULT)
+	</select>
+	
+</mapper>

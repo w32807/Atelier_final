@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.MP_Dao">
+
+	<select id="getSendingProd" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM PROD_ORDER WHERE PO_CM_ID=#{id} AND PO_STATE='before'
+	</select>
+	
+	<select id="getSubscribedNum" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM SUBSCRIBE WHERE SC_CM_ID=#{id}
+	</select>
+	
+	<select id="getUncheckedMessageNum" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM MESSAGE WHERE MG_RECEIVER=#{id} AND MG_CHECK='F'
+	</select>
+	
+	<select id="getProdOrderList" parameterType="String" resultType="com.atelier.dto.PO_Dto">
+		SELECT PO_PD_CODE, PO_DATE, PO_STATE, PO_AT_ID, PO_NUM FROM PROD_ORDER WHERE PO_CM_ID=#{id}
+	</select>
+	
+	<select id="getProdName" parameterType="int" resultType="String">
+		SELECT PD_NAME FROM PRODUCT WHERE PD_CODE=#{pdCode}
+	</select>
+	
+	<insert id="sendMtoSeller" parameterType="com.atelier.dto.MG_Dto">
+		INSERT INTO MESSAGE VALUES (MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},DEFAULT,#{mg_contents},SYSDATE)
+	</insert>
+	
+	<delete id="actMyPageOrderCancle" parameterType="Integer">
+		DELETE FROM PROD_ORDER WHERE PO_NUM=#{po_num}
+	</delete>
+	
+	<select id="getSubscribeList" parameterType="String" resultType="com.atelier.dto.MP_SubscribeDto">
+		SELECT SC_NUM, SC_AT_ID FROM SUBSCRIBE WHERE SC_CM_ID=#{id}
+	</select>
+	
+	<select id="getAtName" parameterType="String" resultType="String">
+		SELECT AT_NAME FROM ATELIER WHERE AT_ID=#{atId}
+	</select>
+	
+	<select id="getAtSeq" parameterType="String" resultType="Integer">
+		SELECT AT_SEQ FROM ATELIER WHERE AT_ID=#{sc_at_id}
+	</select>
+	
+	<delete id="actMyPageDelSubs" parameterType="com.atelier.dto.MP_SubscribeDto">
+		DELETE FROM SUBSCRIBE WHERE SC_CM_ID=#{sc_cm_id} AND SC_AT_ID=#{sc_at_id}
+	</delete>
+	
+	<insert id="sendAdminMessageFromMP" parameterType="com.atelier.dto.MG_Dto">
+		INSERT INTO MESSAGE VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},DEFAULT,#{mg_contents},DEFAULT)
+	</insert>
+	
+</mapper>

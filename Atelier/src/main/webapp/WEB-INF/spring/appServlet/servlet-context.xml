@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	
+	
+	
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- commons-io, commons-fileupload를 스프링에서 사용하기위해서 MultipartResolver 가 있는데 그 설정을 하자 -->
+    <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <beans:property name="defaultEncoding" value="UTF-8"/>
+        <beans:property name="maxUploadSize" value="10000000"/><!-- byte 단위로 10mb -->
+        <beans:property name="maxInMemorySize" value="10000000"/><!-- 파일 당 메모리에 적재 될 상한 -->
+    </beans:bean>
+	     
+	     <context:component-scan base-package="com.atelier.main.service"/>
+         <context:component-scan base-package="com.atelier.main.controller"/>
+         <context:component-scan base-package="com.atelier.mypage.service"/>
+         <context:component-scan base-package="com.atelier.mypage.controller"/>
+         <context:component-scan base-package="com.atelier.ad.controller"/>
+         <context:component-scan base-package="com.atelier.ad.service"/>
+         <context:component-scan base-package="com.atelier.at.controller"/>
+         <context:component-scan base-package="com.atelier.at.service"/>
+         
+         <context:component-scan base-package="com.atelier.co.service"/>
+         <context:component-scan base-package="com.atelier.co.controller"/>
+	
+</beans:beans>

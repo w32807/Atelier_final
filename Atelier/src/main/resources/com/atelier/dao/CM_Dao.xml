@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.CM_Dao">
+
+   <insert id="memberInsert" parameterType="com.atelier.dto.CM_Dto">
+      INSERT INTO COMMON_MEMBER
+      VALUES (#{cm_id},#{cm_pwd},#{cm_name},#{cm_nick},#{cm_phone},#{cm_addr},DEFAULT,'일반회원',#{cm_pfphoto})
+   </insert>
+	
+	<select id="getSecurityPwd" parameterType="String" resultType="String">
+		SELECT cm_pwd FROM COMMON_MEMBER WHERE cm_id=#{id}
+	</select>
+	
+	<select id="getMemberInfo" parameterType="String" resultType="com.atelier.dto.CM_Dto">
+		SELECT * FROM COMMON_MEMBER WHERE cm_id=#{id}
+	</select>
+
+	<update id="memberUpdate" parameterType="com.atelier.dto.CM_Dto">
+		UPDATE COMMON_MEMBER 
+		SET CM_NAME=#{cm_name},CM_NICK=#{cm_nick},CM_PHONE=#{cm_phone},CM_ADDR=#{cm_addr},CM_ADDR2=#{cm_addr2} 
+		WHERE CM_ID=#{cm_id}
+	</update>
+	
+	<!-- 아이디 유효성 검사 -->
+	<select id="checkOverId" parameterType="String" resultType="Integer">
+		select count(*) from COMMON_MEMBER WHERE CM_ID=#{CM_ID}
+	</select>
+	
+	<!-- 비밀번호 변경  -->
+	<update id="upPass" parameterType="com.atelier.dto.CM_Dto">
+		UPDATE CM 
+		SET CM_PWD=#{cm_pwd}
+		WHERE CM_ID=#{cm_id}
+	</update>
+	
+	<!-- 프로필 사진 저장 -->
+	<insert id="pfPhoto" parameterType="String">
+		UPDATE COMMON_MEMBER SET CM_PFPHOTO=#{profileName} WHERE CM_ID=#{profileName}
+	</insert>
+	
+	<!-- 아이디 유효성 검사 -->
+	<select id="checkRegistOverllap" parameterType="String" resultType="Integer">
+		select count(*) from AG WHERE AG_ID = #{ID}
+	</select>
+	
+	<select id="getproduct_AllList" resultType="com.atelier.dto.PD_productDto">
+		SELECT * FROM PD WHERE PD_REGIST='T'
+	</select>
+	
+	<select id="getPi_oriName" parameterType="Integer" resultType="String">
+		SELECT PI_ORINAME FROM PI WHERE PI_PD_CODE = #{pd_code}
+	</select>
+	
+	<select id="getProdList" parameterType="String" resultType="com.atelier.dto.PD_productDto">
+		SELECT * FROM PD WHERE PD_REGIST='T' AND PD_CATE = #{pd_cate}
+	</select>
+	
+	<select id="getprodDetail" resultType="com.atelier.dto.PD_productDto">
+		SELECT * FROM PD WHERE PD_CODE = #{pd_code}
+	
+	</select>
+	
+	<select id="getAt_num" parameterType="String" resultType="Integer">
+		SELECT AT_SEQ FROM AT WHERE AT_NAME = #{pd_at_name}	
+	</select>
+  
+  	<insert id="insertbasket" parameterType="com.atelier.dto.BT_Dto">
+  		INSERT INTO BT VALUES(BT_NUM_SEQ.NEXTVAL,#{bt_cm_id},#{bt_at_name},#{bt_price},#{bt_count},#{bt_pd_code})
+  	</insert>
+  	
+  	<select id="getPd_code" parameterType="Integer" resultType="Integer">
+  		SELECT BT_PD_CODE FROM BT WHERE BT_NUM = #{getorderVtNum}
+  	</select>
+  	
+  	<insert id="orderInsert" parameterType="com.atelier.vo.PO_Vo">
+  		INSERT INTO PO
+  		VALUES (PO_NUM_SEQ.NEXTVAL, #{po_cm_id}, #{po_pd_code},	DEFAULT, #{po_count}, 
+  		#{po_price},SYSDATE,#{po_addr},#{po_at_id},#{po_at_name})
+  	</insert>
+  	
+  	<update id="userStateChange" parameterType="com.atelier.dto.CM_Dto">
+		UPDATE CM 
+		SET CM_STATE=#{cm_state}
+		WHERE CM_ID=#{cm_id}
+	</update>
+  	
+  	<select id="getAt" parameterType="String" resultType="com.atelier.dto.AT_Dto">
+		SELECT * FROM AT WHERE AT_ID = #{at_id}
+	</select>   	
+  	
+</mapper>

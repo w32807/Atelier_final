@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.RO_Dao">
+
+	<select id="getATOrderInfoList" parameterType="String" resultType="com.atelier.dto.RO_Dto">
+		SELECT * FROM RO
+		WHERE RO_BUYER=#{id}
+	</select>
+	
+	<delete id="rmOrderListCancle" parameterType="Integer">
+		DELETE RO WHERE RO_NUM=#{ro_num}
+	</delete>
+	
+	<insert id="rmPaymentProd" parameterType="com.atelier.dto.RO_Dto">
+		INSERT INTO RO VALUES(RO_NUM_SEQ.NEXTVAL,#{ro_buyer},DEFAULT,#{ro_type},#{ro_rm_num}
+		,#{ro_rm_price},#{ro_count},DEFAULT)
+	</insert>
+	
+</mapper>

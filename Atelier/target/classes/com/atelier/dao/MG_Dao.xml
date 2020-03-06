@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.atelier.dao.MG_Dao">
+
+	<select id="getList" resultType="com.atelier.dto.MG_Dto"  parameterType="String">
+		SELECT * FROM MESSAGE WHERE MG_RECEIVER = #{mg_receiver} ORDER BY
+		MG_NUM DESC
+	</select>
+
+	<select id="getMessage" parameterType="Integer" resultType="com.atelier.dto.MG_Dto">
+		SELECT * FROM MESSAGE 
+		WHERE MG_NUM=#{mg_num}
+	</select>
+
+	<insert id="SendMessage" parameterType="com.atelier.dto.MG_Dto">
+		INSERT INTO MESSAGE
+		VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},'F',#{mg_contents},DEFAULT)
+	</insert>
+
+	<update id="ChangeCheck" parameterType="Integer">
+		UPDATE MESSAGE SET MG_CHECK='T' WHERE MG_NUM = #{mg_num}
+	</update>
+
+</mapper>

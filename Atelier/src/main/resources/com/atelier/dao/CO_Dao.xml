@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.CO_Dao">
+
+	 <select id="getNoticeList" resultType="com.atelier.dto.CO_NoticeDto">
+	      <![CDATA[
+	         SELECT nt_num, nt_title, nt_id, nt_count
+	         FROM NTLIST
+	         WHERE RONUM>=#{noticePageNum}*10-9
+	         AND RONUM<=#{noticePageNum}*10 ORDER BY NT_NUM DESC
+	      ]]>
+   </select>
+
+	<select id="getNoticeContents" parameterType="Integer" resultType="com.atelier.dto.CO_NoticeDto">
+			SELECT *
+			FROM NT
+			WHERE nt_num = #{nt_num}
+	</select>
+
+	<select id="getBoardCount" resultType="Integer">
+			SELECT COUNT(*) FROM NTLIST
+	</select>
+	
+	<select id="getFAQList" resultType="com.atelier.dto.FT_FAQDto">
+	      <![CDATA[
+	         SELECT * FROM FAQLIST
+	         WHERE RONUM>=#{FAQPageNum}*10-9
+	         AND RONUM<=#{FAQPageNum}*10 ORDER BY FT_NUM DESC
+	      ]]>	
+   </select>
+	
+	<select id="getFAQBoardCount" resultType="Integer">
+			SELECT COUNT(*) FROM FT
+	</select>
+	
+	<select id="viewFAQContents" parameterType="Integer" resultType="com.atelier.dto.FT_FAQDto">
+			SELECT * FROM FT WHERE FT_NUM=#{ft_num}
+	</select>
+	<insert id="ADSendMessage" parameterType="com.atelier.dto.MG_Dto">
+			INSERT INTO MESSAGE VALUES(MG_NUM_SEQ.NEXTVAL,#{mg_sender},#{mg_receiver},'F',#{mg_contents},DEFAULT)
+	</insert>
+
+	<update id="noticeCountUpdate" parameterType="Integer">
+		UPDATE NT SET NT_COUNT = NT_COUNT + 1
+		WHERE NT_NUM = #{nt_num}
+	</update>
+	
+</mapper>

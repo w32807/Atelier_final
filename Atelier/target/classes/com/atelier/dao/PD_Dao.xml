@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.PD_Dao">
+	<select id="getATProdList" parameterType="map" resultType="com.atelier.dto.PD_productDto">
+		<![CDATA[SELECT * FROM PD WHERE PD_AT_ID = #{pd_at_id} AND PD_REGIST = 'T']]>
+	</select>
+	
+	<select id="getATProdListCount" resultType="Integer">
+		SELECT COUNT(*) FROM PD
+	</select>
+	
+	<select id="getATProdRegistTrueList" parameterType="map" resultType="com.atelier.dto.PD_productDto">
+		<![CDATA[
+		SELECT * FROM 
+        (SELECT ROWNUM RONUM, PD.* FROM 
+        (SELECT * FROM PD WHERE PD_REGIST='T' ORDER BY PD_CODE)PD)
+        WHERE RONUM <=#{maxNum}-(#{pageNum}-1)*9
+		AND RONUM>=#{maxNum}-(#{pageNum}-1)*9-8
+		ORDER BY PD_CODE DESC
+		]]>
+	</select>
+	
+	<update id="prodRegistCancle" parameterType="String">
+		UPDATE PD SET PD_REGIST='F'
+		WHERE PD_CODE=#{pd_code}
+	</update>
+	
+	<select id="getPi_oriName" parameterType="Integer" resultType="String">
+		SELECT PI_ORINAME FROM PI WHERE PI_PD_CODE = #{pd_code}
+	</select>
+	
+	<select id="getPDListByAT" resultType="com.atelier.dto.PD_productDto">
+		SELECT * FROM PD
+		WHERE PD_AT_ID = #{at_id}
+	</select>
+	
+	<delete id="deleteATUserPDData" parameterType="String">
+		DELETE FROM PD
+		WHERE PD_AT_ID = #{cm_id}
+	</delete>
+	
+</mapper>

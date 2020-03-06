@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atelier.dao.NT_Dao">
+	<select id="getADNoticeList" parameterType="map" resultType="com.atelier.dto.CO_NoticeDto">
+			<![CDATA[
+			 SELECT * FROM 
+	        (SELECT ROWNUM RONUM, NT.* FROM 
+	          (SELECT * FROM NT ORDER BY NT_NUM )NT  )
+	        WHERE RONUM <=#{maxNum}-(#{pageNum}-1)*10
+			AND RONUM>=#{maxNum}-(#{pageNum}-1)*10-9
+			ORDER BY NT_NUM DESC
+			]]>
+	</select>
+	
+	<select id="getADNoticeCount" resultType="Integer">
+			SELECT COUNT(*) FROM NTLIST
+	</select>
+	
+	<select id="getADNoticeDetail" parameterType="Integer" resultType="com.atelier.dto.CO_NoticeDto">
+			SELECT * FROM NT WHERE NT_NUM=#{nt_num}
+	</select>
+	
+	<insert id="ADNoticeInsert" parameterType="com.atelier.dto.CO_NoticeDto">
+	   		INSERT INTO NT
+	   		VALUES(NT_NUM_SEQ.NEXTVAL,#{nt_title},#{nt_contents},#{nt_id},DEFAULT)
+   </insert>
+   
+   <update id="ADNoticeUpdate" parameterType="com.atelier.dto.CO_NoticeDto">
+	   		UPDATE NT SET NT_TITLE=#{nt_title}, NT_CONTENTS=#{nt_contents}
+	   		WHERE NT_NUM=#{nt_num}
+   </update>
+   
+   <delete id="ADNoticeDelete" parameterType="String">
+   			DELETE NT WHERE NT_NUM=#{nt_num}
+   </delete>
+
+	<!-- 공지사항 작성 -->
+   <insert id="noticeWrite"  parameterType="com.atelier.dto.AT_NT_Dto">
+			INSERT INTO AT_NOTICE VALUES (AT_NT_NUM_SEQ.NEXTVAL,#{at_nt_title},#{at_nt_contents},#{at_nt_id},DEFAULT)
+	</insert>
+	
+	<!--  공지사항 리스트 출력 -->
+	<select id="getNtList" parameterType="String" resultType="com.atelier.dto.AT_NT_Dto">
+		SELECT * FROM  AT_NOTICE WHERE AT_NT_ID = #{at_nt_id} ORDER BY AT_NT_NUM DESC
+	</select>
+	
+   <!-- 전체 공지사항 글 갯수 구하기 -->
+   <select id="getBoardCount" resultType="Integer" >
+			SELECT COUNT(*) FROM AT_NOTICE
+	</select>
+	<!--  공지사항 조회수 증가 -->
+	<update id="upView" parameterType="Integer">
+		UPDATE AT_NOTICE SET AT_NT_COUNT=AT_NT_COUNT+1
+		WHERE AT_NT_NUM=#{at_nt_num}
+	</update>
+
+	<!-- 공지사항 세부내용 출력 -->
+	<select id="getContents" parameterType="Integer" resultType="com.atelier.dto.AT_NT_Dto">
+		SELECT * FROM AT_NOTICE
+		WHERE AT_NT_NUM=#{at_nt_num}
+	</select>
+	<!-- 공지사항 글 삭제 -->
+	<delete id="delNoticeContents" parameterType="Integer">
+		DELETE FROM AN
+		WHERE AT_NT_NUM=#{at_nt_bnum}
+	</delete>
+	
+</mapper>
