@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atelier.dao.PD_Dao">
 	<select id="getATProdList" parameterType="map" resultType="com.atelier.dto.PD_productDto">
-		<![CDATA[SELECT * FROM PD WHERE PD_AT_ID = #{pd_at_id} AND PD_REGIST = 'T']]>
+		SELECT * FROM PD WHERE PD_AT_ID = #{pd_at_id} 
 	</select>
 	
 	<select id="getATProdListCount" resultType="Integer">
